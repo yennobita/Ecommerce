@@ -9,7 +9,7 @@
                     <h2>Thanh Toán</h2>
                     <div class="breadcrumb__option">
                         <a href="/">Trang Chủ</a>
-                        <span>Thanh Toán</span>
+                        <span>Thanh Toán </span>
                     </div>
                 </div>
             </div>
@@ -86,6 +86,8 @@
                             <div>
                                 <button class="site-btn" style="border-radius: 10px;" onclick="postCheckout()"
                                     >Đặt hàng</button>
+                                   
+
                             </div>
 
                         </div>
@@ -172,6 +174,27 @@
         $("#notify").html(`Bạn chờ chút nhé!`)
     }
     errorNumberPhone();
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const paymentButton = document.getElementById('paymentButton');
+
+    if (paymentForm) {
+        paymentForm.addEventListener('submit', function (event) {
+            event.preventDefault(); // Ngăn form gửi request mặc định
+
+            // Lấy thông tin cần thiết
+            const orderId = '123456'; // Thay bằng mã đơn hàng thực tế
+            const amount = 10000; // Thay bằng số tiền thực tế
+
+            // Tạo URL thanh toán
+            const paymentUrl = createPaymentUrl(orderId, amount);
+
+            // Thực hiện chuyển hướng người dùng đến trang thanh toán của VNPAY
+            window.location.href = paymentUrl;
+        });
+    }
+});
 </script>
 {{/if}}
 {{/section}}

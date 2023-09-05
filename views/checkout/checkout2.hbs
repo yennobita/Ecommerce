@@ -1,0 +1,164 @@
+{{>header page="page"}}
+{{>hero}}
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-section set-bg" data-setbg="img/breadcrumb.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb__text">
+                    <h2>Thanh Toán</h2>
+                    <div class="breadcrumb__option">
+                        <a href="/">Trang Chủ</a>
+                        <span>Thanh Toán</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+
+<!-- Checkout Section Begin -->
+<section class="checkout spad">
+    <div class="container">
+        {{!-- <div class="row">
+            <div class="col-lg-12">
+                <h6><span class="icon_tag_alt"></span> Have a coupon? <a href="#">Click here</a> to enter your code
+                </h6>
+            </div>
+        </div> --}}
+        <div class="checkout__form">
+            <h4>Hóa đơn chi tiết</h4>
+            <div class="table-responsive">
+                <form id="createOrder" (action='create_payment_url' , method='POST' )>
+                    <div class="form-group">
+                        <label>Số tiền</label>
+                        <input class="form-control" id="amount" (name='amount' , placeholder='Số tiền' , value="amount"
+                            )>
+
+                        <div class="form-group">
+                            <label>Chọn Phương thức thanh toán:</label>
+                            <label class=".control-label"></label>
+                            <div class="controls">
+                                <label class="radio-inline">
+                                    <input type="radio" name="bankCode" id="defaultPaymentMethod" value=""
+                                        checked="true"> Cổng thanh toán VNPAYQR
+                                </label>
+                            </div>
+                            <div class="controls">
+                                <label class="radio-inline">
+                                    <input type="radio" name="bankCode" id="vnpayqrPaymentMethod" value="VNPAYQR"> Thanh
+                                    toán qua ứng dụng hỗ trợ VNPAYQR
+                                </label>
+                            </div>
+                            <div class="controls">
+                                <label class="radio-inline">
+                                    <input type="radio" name="bankCode" id="vnbankPaymentMethod" value="VNBANK"> Thanh
+                                    toán qua ATM-Tài khoản ngân hàng nội địa
+                                </label>
+                            </div>
+                            <div class="controls">
+                                <label class="radio-inline">
+                                    <input type="radio" name="bankCode" id="intcardPaymentMethod" value="INTCARD"> Thanh
+                                    toán qua thẻ quốc tế
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label>Ngôn ngữ</label>
+                                <label class="control-label"></label>
+                                <div class="controls">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="language" id="vnLanguage" value="vn" checked="true">
+                                        Tiếng việt
+                                    </label>
+                                    <div class="controls">
+                                        <label class="radio-inline">
+                                            <input type="radio" name="language" id="enLanguage" value="en"> Tiếng anh
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-default" id="btnPopup" type="submit">Thanh toán</button>
+
+                        </div>
+                    </div>
+</section>
+
+<!-- Checkout Section End -->
+<button id="errorListProduct" style="display: none" data-toggle="modal" data-target="#notification"></button>
+<!-- Modal -->
+<div class="modal fade" id="notification" tabindex="-1" role="dialog" aria-labelledby="notification-label"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notification-label">Thông báo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="notify">
+                Bạn chờ chút nhé!
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="fixHtml()">Ok</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="admin-url" value="{{admin_url}}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="/js/socket.io.js"></script>
+
+{{#section 'script'}}
+<script>
+    const admin_url = $('#admin-url').val() || 'http://localhost:3000';
+    const socket = io(admin_url); // port này là port của đích đến của socket.io
+    console.log(admin_url);
+    function sendMessage() {
+        let msg = $('#name-customer').val();
+        console.log(msg);
+        socket.emit("send-notification", msg);
+    }
+
+    function postCheckout() {
+        //let data = $('#formCheckout').serializeArray();
+        //console.log(data);
+        const phone = $('#phone').val();
+        if (phone) {
+            sendMessage();
+            //$("#formCheckout").submit();
+            //console.log(phone);
+        }
+    }
+</script>
+{{#if errorListProduct}}
+<script>
+    async function errorListProduct() {
+        $("#notify").html(`Danh sánh đặt hàng trống!!`)
+        $('#notification').modal('show');
+        return true;
+    }
+    function fixHtml() {
+        $("#notify").html(`Bạn chờ chút nhé!`)
+    }
+    errorListProduct();
+</script>
+{{/if}}
+
+{{#if errorNumberPhone}}
+<script>
+    async function errorNumberPhone() {
+        $("#notify").html(`Bạn nhập sai số điện thoại!!`)
+        $('#notification').modal('show');
+        return true;
+    }
+    function fixHtml() {
+        $("#notify").html(`Bạn chờ chút nhé!`)
+    }
+    errorNumberPhone();
+</script>
+{{/if}}
+{{/section}}

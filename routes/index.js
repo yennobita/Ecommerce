@@ -2,6 +2,8 @@ const productRouter = require("./product");
 const homeRouter = require("./home");
 const userRouter = require("./user");
 const checkOutRouter = require("./checkOut");
+const checkOutRouter2 = require("./checkOut2");
+
 const chatBotRouter = require("./chatbot");
 
 function route(app) {
@@ -34,8 +36,6 @@ function route(app) {
   app.use("/checkout", checkOutRouter);
 
   //app.use("/webhook",chatBotRouter);
-  
-
 }
 
 module.exports = route;
